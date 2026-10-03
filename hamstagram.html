@@ -1,0 +1,4144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🐹 햄스타그램</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+}
+
+body{
+  font-family:Arial,"Noto Sans KR",sans-serif;
+  background:#f5f5f5;
+  color:#222;
+  overflow-x:hidden;
+}
+
+button,input,textarea{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* =========================
+   로그인
+========================= */
+
+.auth-page{
+  min-height:100vh;
+  min-height:100dvh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  background:linear-gradient(135deg,#ffe6f2,#fff4c7);
+}
+
+.auth-box{
+  width:min(100%,420px);
+  background:white;
+  border-radius:24px;
+  padding:35px 30px;
+  box-shadow:0 10px 35px rgba(0,0,0,.12);
+}
+
+.logo{
+  text-align:center;
+  font-size:36px;
+  font-weight:bold;
+  color:#ff6fa5;
+}
+
+.logo-sub{
+  text-align:center;
+  color:#888;
+  margin:8px 0 28px;
+}
+
+.form-group{
+  margin-bottom:15px;
+}
+
+.form-label{
+  display:block;
+  font-size:14px;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.form-input{
+  width:100%;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  outline:none;
+  font-size:16px;
+}
+
+.form-input:focus{
+  border-color:#ff72a5;
+}
+
+.main-btn{
+  width:100%;
+  border:none;
+  padding:14px;
+  border-radius:13px;
+  background:#ff72a5;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.sub-btn{
+  width:100%;
+  border:none;
+  background:none;
+  color:#777;
+  margin-top:15px;
+  padding:10px;
+}
+
+/* =========================
+   상단
+========================= */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:65px;
+  background:white;
+  border-bottom:1px solid #eee;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+}
+
+.top-logo{
+  color:#ff6fa5;
+  font-size:25px;
+  font-weight:bold;
+}
+
+.top-user{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+#topUserName{
+  max-width:180px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.top-user button{
+  border:none;
+  background:#f3f3f3;
+  border-radius:10px;
+  padding:8px 12px;
+}
+
+/* =========================
+   PC 레이아웃
+========================= */
+
+.layout{
+  width:min(1150px,100%);
+  margin:auto;
+  display:grid;
+  grid-template-columns:220px minmax(0,1fr);
+  gap:25px;
+  padding:25px 15px 60px;
+}
+
+.sidebar{
+  position:sticky;
+  top:90px;
+  height:fit-content;
+  background:white;
+  border-radius:18px;
+  padding:12px;
+  box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+
+.nav-btn{
+  width:100%;
+  border:none;
+  background:none;
+  padding:13px 15px;
+  text-align:left;
+  border-radius:12px;
+  margin-bottom:4px;
+  font-size:15px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:#fff0f6;
+  color:#ff5794;
+  font-weight:bold;
+}
+
+.content{
+  min-width:0;
+  width:100%;
+}
+
+.section-title{
+  font-size:25px;
+  margin:0 0 20px;
+}
+
+/* =========================
+   카드
+========================= */
+
+.card{
+  background:white;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 3px 15px rgba(0,0,0,.05);
+  min-width:0;
+}
+
+.empty{
+  text-align:center;
+  color:#999;
+  padding:50px 10px;
+}
+
+/* =========================
+   게시물
+========================= */
+
+.post-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.profile-img{
+  flex:none;
+  width:45px;
+  height:45px;
+  object-fit:cover;
+  border-radius:50%;
+  background:#ffe7a8;
+}
+
+.post-user-name{
+  font-weight:bold;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.post-user-id{
+  color:#999;
+  font-size:13px;
+}
+
+.post-time{
+  color:#aaa;
+  font-size:12px;
+  margin-left:auto;
+  white-space:nowrap;
+}
+
+.post-text{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.6;
+  margin:15px 0;
+}
+
+.post-media{
+  display:block;
+  width:100%;
+  max-width:100%;
+  max-height:min(600px,70vh);
+  object-fit:contain;
+  border-radius:14px;
+  background:#f5f5f5;
+}
+
+.media-slider{
+  position:relative;
+  width:100%;
+  overflow:hidden;
+  border-radius:14px;
+}
+
+.media-slider .post-media{
+  border-radius:14px;
+}
+
+.media-number{
+  position:absolute;
+  right:12px;
+  top:12px;
+  background:rgba(0,0,0,.6);
+  color:white;
+  border-radius:20px;
+  padding:5px 9px;
+  font-size:12px;
+  z-index:3;
+}
+
+.media-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:38px;
+  border:none;
+  border-radius:50%;
+  background:rgba(0,0,0,.5);
+  color:white;
+  font-size:25px;
+  z-index:4;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.media-left{
+  left:10px;
+}
+
+.media-right{
+  right:10px;
+}
+
+.post-stats{
+  color:#999;
+  font-size:12px;
+  margin-top:10px;
+}
+
+.post-actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:13px;
+}
+
+.action-btn{
+  border:none;
+  background:#f5f5f5;
+  padding:8px 11px;
+  border-radius:10px;
+  font-size:14px;
+}
+
+.action-btn.active{
+  background:#ffe5ef;
+  color:#ff4e8e;
+  font-weight:bold;
+}
+
+.comment-box{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+}
+
+.comment-box input{
+  flex:1;
+  min-width:0;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:10px;
+  font-size:15px;
+}
+
+.comment-box button{
+  flex:none;
+  border:none;
+  background:#ff72a5;
+  color:white;
+  border-radius:10px;
+  padding:0 15px;
+}
+
+.comment{
+  padding:9px 0;
+  border-bottom:1px solid #eee;
+  overflow-wrap:anywhere;
+}
+
+.comment-user{
+  font-weight:bold;
+  margin-right:5px;
+}
+
+.delete-comment{
+  border:none;
+  background:none;
+  color:#aaa;
+  font-size:11px;
+  margin-left:5px;
+}
+
+.hashtag{
+  color:#ff5794;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* =========================
+   검색
+========================= */
+
+.search-box{
+  display:flex;
+  gap:8px;
+}
+
+.search-box input{
+  flex:1;
+  min-width:0;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:13px;
+  font-size:16px;
+}
+
+.search-box button{
+  flex:none;
+  border:none;
+  border-radius:12px;
+  background:#ff72a5;
+  color:white;
+  padding:0 20px;
+}
+
+.search-tabs{
+  display:flex;
+  gap:8px;
+  margin-top:15px;
+}
+
+.search-tab{
+  border:none;
+  background:#f2f2f2;
+  border-radius:10px;
+  padding:8px 13px;
+}
+
+.search-tab.active{
+  background:#ffe4ef;
+  color:#ff4e8e;
+  font-weight:bold;
+}
+
+/* =========================
+   글쓰기
+========================= */
+
+textarea{
+  width:100%;
+  min-height:140px;
+  resize:vertical;
+  border:1px solid #ddd;
+  border-radius:14px;
+  padding:14px;
+  font-size:16px;
+  outline:none;
+}
+
+textarea:focus{
+  border-color:#ff72a5;
+}
+
+.upload-buttons{
+  display:flex;
+  gap:10px;
+  margin:15px 0;
+  flex-wrap:wrap;
+}
+
+.upload-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:45px;
+  padding:12px 16px;
+  border-radius:12px;
+  background:#fff0f6;
+  color:#ff5794;
+  font-weight:bold;
+  cursor:pointer;
+  border:1px solid #ffd2e2;
+}
+
+.upload-btn:hover{
+  background:#ffe3ef;
+}
+
+.video-btn{
+  background:#f0edff;
+  color:#745cff;
+  border-color:#ddd5ff;
+}
+
+#postPreview{
+  width:100%;
+  min-width:0;
+}
+
+.preview-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.preview-item{
+  position:relative;
+  min-width:0;
+}
+
+.preview-item img{
+  display:block;
+  width:100%;
+  aspect-ratio:1;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+.preview-delete{
+  position:absolute;
+  top:5px;
+  right:5px;
+  width:29px;
+  height:29px;
+  border:none;
+  border-radius:50%;
+  background:rgba(0,0,0,.65);
+  color:white;
+  font-size:18px;
+  line-height:29px;
+  padding:0;
+}
+
+.preview-video{
+  display:block;
+  width:100%;
+  max-width:100%;
+  max-height:500px;
+  border-radius:12px;
+}
+
+/* =========================
+   프로필
+========================= */
+
+.profile-top{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  min-width:0;
+}
+
+.profile-big-img{
+  flex:none;
+  width:100px;
+  height:100px;
+  object-fit:cover;
+  border-radius:50%;
+}
+
+.profile-name{
+  font-size:25px;
+  font-weight:bold;
+  overflow-wrap:anywhere;
+}
+
+.profile-id{
+  color:#888;
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+
+.profile-stats{
+  display:flex;
+  gap:25px;
+  margin-top:20px;
+}
+
+.profile-stat{
+  border:none;
+  background:none;
+  text-align:center;
+  cursor:pointer;
+}
+
+.profile-stat strong{
+  display:block;
+  font-size:20px;
+}
+
+.level-box{
+  background:#fff5d9;
+  padding:15px;
+  border-radius:15px;
+  margin-top:20px;
+}
+
+.progress-bg{
+  height:10px;
+  background:#eee;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress{
+  height:100%;
+  background:#ffb347;
+}
+
+/* =========================
+   사람
+========================= */
+
+.person-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
+  min-width:0;
+}
+
+.person-info{
+  flex:1;
+  min-width:0;
+}
+
+.person-name{
+  font-weight:bold;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.person-id{
+  color:#999;
+  font-size:13px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.follow-btn{
+  flex:none;
+  border:none;
+  border-radius:10px;
+  padding:8px 13px;
+  background:#ff72a5;
+  color:white;
+}
+
+.follow-btn.following{
+  background:#eee;
+  color:#555;
+}
+
+/* =========================
+   알림
+========================= */
+
+.notification{
+  padding:14px;
+  border-bottom:1px solid #eee;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.notification.unread{
+  background:#fff4f8;
+}
+
+.notification-time{
+  margin-left:auto;
+  color:#aaa;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+/* =========================
+   랭킹
+========================= */
+
+.rank-item{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid #eee;
+  min-width:0;
+}
+
+.rank-number{
+  width:35px;
+  flex:none;
+  text-align:center;
+  font-weight:bold;
+  font-size:20px;
+}
+
+.rank-info{
+  flex:1;
+  min-width:0;
+}
+
+/* =========================
+   태블릿
+========================= */
+
+@media (max-width:900px){
+
+  .layout{
+    grid-template-columns:180px minmax(0,1fr);
+    gap:15px;
+    padding:18px 12px 50px;
+  }
+
+  .sidebar{
+    padding:8px;
+  }
+
+  .nav-btn{
+    padding:11px 10px;
+    font-size:14px;
+  }
+
+  .card{
+    padding:17px;
+  }
+
+}
+
+/* =========================
+   모바일
+========================= */
+
+@media (max-width:700px){
+
+  body{
+    padding-bottom:68px;
+  }
+
+  .topbar{
+    height:58px;
+    padding:0 12px;
+  }
+
+  .top-logo{
+    font-size:20px;
+  }
+
+  #topUserName{
+    display:none;
+  }
+
+  .top-user button{
+    padding:7px 9px;
+    font-size:12px;
+  }
+
+  .layout{
+    display:block;
+    width:100%;
+    padding:14px 10px 20px;
+  }
+
+  .sidebar{
+    position:fixed;
+    z-index:200;
+    left:0;
+    right:0;
+    bottom:0;
+    top:auto;
+    width:100%;
+    height:64px;
+    background:white;
+    border-radius:0;
+    border-top:1px solid #ddd;
+    box-shadow:0 -3px 15px rgba(0,0,0,.08);
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:0;
+    padding:3px 2px;
+  }
+
+  .nav-btn{
+    width:100%;
+    height:58px;
+    padding:4px 1px;
+    margin:0;
+    border-radius:9px;
+    text-align:center;
+    font-size:10px;
+    line-height:1.3;
+  }
+
+  .content{
+    width:100%;
+  }
+
+  .section-title{
+    font-size:22px;
+    margin-bottom:14px;
+  }
+
+  .card{
+    border-radius:15px;
+    padding:13px;
+    margin-bottom:13px;
+  }
+
+  .post-header{
+    gap:8px;
+  }
+
+  .profile-img{
+    width:40px;
+    height:40px;
+  }
+
+  .post-time{
+    font-size:10px;
+  }
+
+  .post-text{
+    margin:12px 0;
+    font-size:15px;
+  }
+
+  .post-media{
+    max-height:65vh;
+    border-radius:11px;
+  }
+
+  .media-arrow{
+    width:34px;
+    height:34px;
+    font-size:22px;
+  }
+
+  .post-actions{
+    gap:5px;
+  }
+
+  .action-btn{
+    padding:8px 9px;
+    font-size:13px;
+  }
+
+  .comment-box input{
+    font-size:14px;
+  }
+
+  .comment-box button{
+    padding:0 11px;
+  }
+
+  .search-box{
+    gap:6px;
+  }
+
+  .search-box button{
+    padding:0 14px;
+  }
+
+  .upload-buttons{
+    gap:7px;
+  }
+
+  .upload-btn{
+    flex:1;
+    min-width:0;
+    padding:11px 8px;
+    font-size:13px;
+  }
+
+  .preview-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:6px;
+  }
+
+  .profile-top{
+    gap:13px;
+  }
+
+  .profile-big-img{
+    width:78px;
+    height:78px;
+  }
+
+  .profile-name{
+    font-size:20px;
+  }
+
+  .profile-stats{
+    justify-content:space-around;
+    gap:5px;
+  }
+
+  .profile-stat{
+    font-size:12px;
+  }
+
+  .profile-stat strong{
+    font-size:18px;
+  }
+
+  .notification{
+    padding:11px 3px;
+  }
+
+  .notification-time{
+    font-size:10px;
+  }
+
+  .rank-item{
+    gap:8px;
+  }
+
+  .rank-number{
+    width:25px;
+    font-size:17px;
+  }
+
+}
+
+/* =========================
+   아주 작은 휴대폰
+========================= */
+
+@media (max-width:380px){
+
+  .top-logo{
+    font-size:18px;
+  }
+
+  .nav-btn{
+    font-size:9px;
+  }
+
+  .upload-btn{
+    font-size:12px;
+  }
+
+  .card{
+    padding:11px;
+  }
+
+  .action-btn{
+    padding:7px 8px;
+    font-size:12px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     로그인 / 회원가입
+========================= -->
+
+<div id="authPage" class="auth-page">
+
+  <div class="auth-box">
+
+    <div class="logo">🐹 햄스타그램</div>
+    <div class="logo-sub">햄스터들의 작은 SNS</div>
+
+    <div id="loginForm">
+
+      <div class="form-group">
+        <label class="form-label">아이디</label>
+        <input
+          id="loginId"
+          class="form-input"
+          placeholder="아이디"
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">비밀번호</label>
+        <input
+          id="loginPw"
+          class="form-input"
+          type="password"
+          placeholder="비밀번호"
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button class="main-btn" onclick="login()">
+        로그인
+      </button>
+
+      <button class="sub-btn" onclick="showSignup()">
+        계정이 없나요? 회원가입
+      </button>
+
+    </div>
+
+    <div id="signupForm" class="hidden">
+
+      <div class="form-group">
+        <label class="form-label">아이디</label>
+        <input
+          id="signupId"
+          class="form-input"
+          maxlength="20"
+          placeholder="한글·영어·숫자·_"
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">닉네임</label>
+        <input
+          id="signupName"
+          class="form-input"
+          maxlength="20"
+          placeholder="이모지·기호 가능, 띄어쓰기 불가"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">비밀번호</label>
+        <input
+          id="signupPw"
+          class="form-input"
+          type="password"
+          placeholder="비밀번호"
+          autocomplete="new-password"
+        >
+      </div>
+
+      <button class="main-btn" onclick="signup()">
+        회원가입
+      </button>
+
+      <button class="sub-btn" onclick="showLogin()">
+        이미 계정이 있어요
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- =========================
+     앱
+========================= -->
+
+<div id="app" class="hidden">
+
+  <header class="topbar">
+
+    <div class="top-logo">
+      🐹 햄스타그램
+    </div>
+
+    <div class="top-user">
+      <span id="topUserName"></span>
+
+      <button onclick="logout()">
+        로그아웃
+      </button>
+    </div>
+
+  </header>
+
+
+  <div class="layout">
+
+    <!-- 메뉴 -->
+
+    <aside class="sidebar">
+
+      <button class="nav-btn active"
+              onclick="showPage('home',this)">
+        🏠<br>홈
+      </button>
+
+      <button class="nav-btn"
+              onclick="showPage('search',this)">
+        🔍<br>검색
+      </button>
+
+      <button class="nav-btn"
+              onclick="showPage('popular',this)">
+        🔥<br>인기
+      </button>
+
+      <button class="nav-btn"
+              onclick="showPage('create',this)">
+        ➕<br>게시물
+      </button>
+
+      <button class="nav-btn"
+              onclick="showPage('notifications',this)">
+        🔔<br>알림
+      </button>
+
+      <button class="nav-btn"
+              onclick="showPage('ranking',this)">
+        🏆<br>랭킹
+      </button>
+
+      <button class="nav-btn"
+              onclick="showPage('profile',this)">
+        👤<br>프로필
+      </button>
+
+    </aside>
+
+
+    <main class="content">
+
+      <!-- 홈 -->
+
+      <section id="homePage">
+
+        <h1 class="section-title">
+          홈 🐹
+        </h1>
+
+        <div id="homePosts"></div>
+
+      </section>
+
+
+      <!-- 검색 -->
+
+      <section id="searchPage" class="hidden">
+
+        <h1 class="section-title">
+          🔍 검색
+        </h1>
+
+        <div class="card">
+
+          <div class="search-box">
+
+            <input
+              id="searchInput"
+              placeholder="게시물·해시태그·닉네임·아이디"
+              onkeydown="if(event.key==='Enter')searchAll()"
+            >
+
+            <button onclick="searchAll()">
+              검색
+            </button>
+
+          </div>
+
+          <div class="search-tabs">
+
+            <button
+              id="searchPostTab"
+              class="search-tab active"
+              onclick="setSearchType('posts')"
+            >
+              📝 게시물
+            </button>
+
+            <button
+              id="searchUserTab"
+              class="search-tab"
+              onclick="setSearchType('users')"
+            >
+              👤 사람
+            </button>
+
+          </div>
+
+        </div>
+
+        <div id="searchResults"></div>
+
+      </section>
+
+
+      <!-- 인기 -->
+
+      <section id="popularPage" class="hidden">
+
+        <h1 class="section-title">
+          🔥 인기 게시물
+        </h1>
+
+        <div id="popularPosts"></div>
+
+      </section>
+
+
+      <!-- 게시물 작성 -->
+
+      <section id="createPage" class="hidden">
+
+        <h1 class="section-title">
+          ➕ 게시물 만들기
+        </h1>
+
+        <div class="card">
+
+          <textarea
+            id="postText"
+            placeholder="햄스터 이야기를 적어보세요 🐹&#10;&#10;예: 우리 햄스터 #츄츄가 오늘도 귀여워요!"
+          ></textarea>
+
+
+          <div class="upload-buttons">
+
+            <label class="upload-btn">
+
+              🖼️ 사진 여러 장 선택
+
+              <input
+                id="postImages"
+                type="file"
+                accept="image/*"
+                multiple
+                hidden
+                onchange="selectImages(event)"
+              >
+
+            </label>
+
+
+            <label class="upload-btn video-btn">
+
+              🎥 동영상 선택
+
+              <input
+                id="postVideo"
+                type="file"
+                accept="video/*"
+                hidden
+                onchange="selectVideo(event)"
+              >
+
+            </label>
+
+          </div>
+
+
+          <div
+            style="
+              font-size:12px;
+              color:#999;
+              margin-bottom:10px;
+            "
+          >
+            사진은 여러 장을 한 번에 선택할 수 있어요.
+          </div>
+
+
+          <div id="postPreview"></div>
+
+
+          <button
+            class="main-btn"
+            onclick="createPost()"
+          >
+            게시하기
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- 알림 -->
+
+      <section id="notificationsPage" class="hidden">
+
+        <h1 class="section-title">
+          🔔 알림
+        </h1>
+
+        <div class="card">
+          <div id="notificationsList"></div>
+        </div>
+
+      </section>
+
+
+      <!-- 랭킹 -->
+
+      <section id="rankingPage" class="hidden">
+
+        <h1 class="section-title">
+          🏆 햄스터 랭킹
+        </h1>
+
+        <div class="card">
+          <div id="rankingList"></div>
+        </div>
+
+      </section>
+
+
+      <!-- 프로필 -->
+
+      <section id="profilePage" class="hidden">
+
+        <h1 class="section-title">
+          👤 프로필
+        </h1>
+
+        <div class="card">
+
+          <div class="profile-top">
+
+            <img
+              id="profilePhoto"
+              class="profile-big-img"
+            >
+
+            <div>
+
+              <div
+                id="profileName"
+                class="profile-name"
+              ></div>
+
+              <div
+                id="profileId"
+                class="profile-id"
+              ></div>
+
+              <label
+                style="
+                  display:inline-block;
+                  margin-top:10px;
+                  color:#ff5794;
+                  cursor:pointer;
+                  font-size:13px;
+                "
+              >
+
+                📷 프로필 사진 변경
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onchange="changeProfilePhoto(event)"
+                  style="display:none"
+                >
+
+              </label>
+
+            </div>
+
+          </div>
+
+
+          <div
+            id="profileLevel"
+            class="level-box"
+          ></div>
+
+
+          <div class="profile-stats">
+
+            <button
+              class="profile-stat"
+              onclick="showPeopleList('posts')"
+            >
+              <strong id="profilePostCount">0</strong>
+              게시물
+            </button>
+
+            <button
+              class="profile-stat"
+              onclick="showPeopleList('followers')"
+            >
+              <strong id="profileFollowerCount">0</strong>
+              팔로워
+            </button>
+
+            <button
+              class="profile-stat"
+              onclick="showPeopleList('following')"
+            >
+              <strong id="profileFollowingCount">0</strong>
+              팔로잉
+            </button>
+
+          </div>
+
+        </div>
+
+        <div id="profilePosts"></div>
+
+      </section>
+
+
+      <!-- 사람 -->
+
+      <section id="peoplePage" class="hidden">
+
+        <h1
+          id="peopleTitle"
+          class="section-title"
+        ></h1>
+
+        <div class="card">
+
+          <div id="peopleList"></div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   데이터
+========================= */
+
+let users =
+  JSON.parse(
+    localStorage.getItem("ham_users") || "[]"
+  );
+
+let posts =
+  JSON.parse(
+    localStorage.getItem("ham_posts") || "[]"
+  );
+
+let notifications =
+  JSON.parse(
+    localStorage.getItem("ham_notifications") || "[]"
+  );
+
+let currentUserId =
+  localStorage.getItem("ham_currentUser");
+
+let currentUser=null;
+
+let selectedPostMedia=[];
+
+let searchType="posts";
+
+let peopleMode="followers";
+
+
+/* =========================
+   저장
+========================= */
+
+function save(){
+
+  localStorage.setItem(
+    "ham_users",
+    JSON.stringify(users)
+  );
+
+  localStorage.setItem(
+    "ham_posts",
+    JSON.stringify(posts)
+  );
+
+  localStorage.setItem(
+    "ham_notifications",
+    JSON.stringify(notifications)
+  );
+
+}
+
+
+/* =========================
+   시작
+========================= */
+
+window.onload=function(){
+
+  if(currentUserId){
+
+    currentUser=
+      users.find(
+        u=>u.id===currentUserId
+      );
+
+    if(currentUser){
+
+      fixOldData();
+      showApp();
+      return;
+
+    }
+
+  }
+
+  showLogin();
+
+};
+
+
+/* =========================
+   데이터 보정
+========================= */
+
+function fixOldData(){
+
+  users.forEach(user=>{
+
+    if(!user.followers)
+      user.followers=[];
+
+    if(!user.following)
+      user.following=[];
+
+    if(typeof user.exp!=="number")
+      user.exp=0;
+
+    if(!user.photo)
+      user.photo="";
+
+  });
+
+
+  posts.forEach(post=>{
+
+    if(!post.likes)
+      post.likes=[];
+
+    if(!post.dislikes)
+      post.dislikes=[];
+
+    if(!post.hearts)
+      post.hearts=[];
+
+    if(!post.comments)
+      post.comments=[];
+
+    if(typeof post.views!=="number")
+      post.views=0;
+
+    if(!post.viewedUsers)
+      post.viewedUsers=[];
+
+    if(!post.mediaItems){
+
+      if(post.media){
+
+        post.mediaItems=[
+          {
+            type:post.mediaType||"image",
+            src:post.media
+          }
+        ];
+
+      }else{
+
+        post.mediaItems=[];
+
+      }
+
+    }
+
+    if(!post.hashtags)
+      post.hashtags=
+        extractHashtags(
+          post.text||""
+        );
+
+  });
+
+
+  save();
+
+}
+
+
+/* =========================
+   로그인
+========================= */
+
+function showLogin(){
+
+  document
+    .getElementById("authPage")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("app")
+    .classList.add("hidden");
+
+  document
+    .getElementById("loginForm")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("signupForm")
+    .classList.add("hidden");
+
+}
+
+
+function showSignup(){
+
+  document
+    .getElementById("loginForm")
+    .classList.add("hidden");
+
+  document
+    .getElementById("signupForm")
+    .classList.remove("hidden");
+
+}
+
+
+function signup(){
+
+  const id=
+    document
+      .getElementById("signupId")
+      .value
+      .trim();
+
+  const name=
+    document
+      .getElementById("signupName")
+      .value
+      .trim();
+
+  const pw=
+    document
+      .getElementById("signupPw")
+      .value;
+
+
+  if(
+    !/^[가-힣a-zA-Z0-9_]{2,20}$/.test(id)
+  ){
+
+    alert(
+      "아이디는 한글, 영어, 숫자, _만 사용할 수 있어요."
+    );
+
+    return;
+  }
+
+
+  if(!name){
+
+    alert("닉네임을 입력해주세요.");
+
+    return;
+  }
+
+
+  if(/\s/.test(name)){
+
+    alert(
+      "닉네임에는 띄어쓰기를 넣을 수 없어요."
+    );
+
+    return;
+  }
+
+
+  if(!pw){
+
+    alert("비밀번호를 입력해주세요.");
+
+    return;
+  }
+
+
+  if(
+    users.some(
+      u=>u.id===id
+    )
+  ){
+
+    alert(
+      "이미 사용 중인 아이디예요."
+    );
+
+    return;
+  }
+
+
+  users.push({
+
+    id,
+    name,
+    pw,
+    photo:"",
+    followers:[],
+    following:[],
+    exp:0
+
+  });
+
+
+  save();
+
+  alert(
+    "회원가입이 완료됐어요! 🐹"
+  );
+
+  showLogin();
+
+}
+
+
+function login(){
+
+  const id=
+    document
+      .getElementById("loginId")
+      .value
+      .trim();
+
+  const pw=
+    document
+      .getElementById("loginPw")
+      .value;
+
+
+  const user=
+    users.find(
+      u=>
+        u.id===id &&
+        u.pw===pw
+    );
+
+
+  if(!user){
+
+    alert(
+      "아이디 또는 비밀번호가 맞지 않아요."
+    );
+
+    return;
+  }
+
+
+  currentUser=user;
+  currentUserId=user.id;
+
+
+  localStorage.setItem(
+    "ham_currentUser",
+    currentUserId
+  );
+
+
+  fixOldData();
+  showApp();
+
+}
+
+
+function logout(){
+
+  currentUser=null;
+  currentUserId=null;
+
+  localStorage.removeItem(
+    "ham_currentUser"
+  );
+
+  showLogin();
+
+}
+
+
+/* =========================
+   앱 표시
+========================= */
+
+function showApp(){
+
+  document
+    .getElementById("authPage")
+    .classList.add("hidden");
+
+  document
+    .getElementById("app")
+    .classList.remove("hidden");
+
+
+  document
+    .getElementById("topUserName")
+    .textContent=
+      currentUser.name;
+
+
+  showPage("home");
+
+}
+
+
+/* =========================
+   페이지
+========================= */
+
+function showPage(page,button){
+
+  const pages=[
+    "home",
+    "search",
+    "popular",
+    "create",
+    "notifications",
+    "ranking",
+    "profile",
+    "people"
+  ];
+
+
+  pages.forEach(p=>{
+
+    const el=
+      document.getElementById(
+        p+"Page"
+      );
+
+    if(el)
+      el.classList.add("hidden");
+
+  });
+
+
+  const target=
+    document.getElementById(
+      page+"Page"
+    );
+
+
+  if(target)
+    target.classList.remove("hidden");
+
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(
+      b=>b.classList.remove("active")
+    );
+
+
+  if(button)
+    button.classList.add("active");
+
+
+  if(page==="home")
+    renderHome();
+
+  if(page==="search")
+    searchAll();
+
+  if(page==="popular")
+    renderPopular();
+
+  if(page==="notifications")
+    renderNotifications();
+
+  if(page==="ranking")
+    renderRanking();
+
+  if(page==="profile")
+    renderProfile();
+
+  if(page==="people")
+    renderPeopleList();
+
+}
+
+
+/* =========================
+   기본 프로필 이미지
+========================= */
+
+function getPhoto(user){
+
+  if(user && user.photo)
+    return user.photo;
+
+
+  return "data:image/svg+xml;charset=UTF-8,"+
+    encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="100"
+           height="100">
+        <rect width="100" height="100"
+              fill="#ffe7a8"/>
+        <circle cx="50" cy="57" r="30"
+                fill="#d89b55"/>
+        <circle cx="35" cy="30" r="15"
+                fill="#d89b55"/>
+        <circle cx="65" cy="30" r="15"
+                fill="#d89b55"/>
+        <circle cx="40" cy="53" r="4"
+                fill="#222"/>
+        <circle cx="60" cy="53" r="4"
+                fill="#222"/>
+        <circle cx="50" cy="63" r="5"
+                fill="#f6aaaa"/>
+      </svg>
+    `);
+
+}
+
+
+/* =========================
+   프로필 사진
+========================= */
+
+function changeProfilePhoto(event){
+
+  const file=
+    event.target.files[0];
+
+  if(!file)
+    return;
+
+
+  if(!file.type.startsWith("image/")){
+
+    alert(
+      "이미지 파일만 사용할 수 있어요."
+    );
+
+    return;
+  }
+
+
+  const reader=
+    new FileReader();
+
+
+  reader.onload=function(e){
+
+    currentUser.photo=
+      e.target.result;
+
+
+    const index=
+      users.findIndex(
+        u=>u.id===currentUser.id
+      );
+
+
+    if(index!==-1)
+      users[index]=currentUser;
+
+
+    save();
+
+    renderProfile();
+
+  };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =========================
+   사진 여러 장
+========================= */
+
+function selectImages(event){
+
+  const files=
+    [...event.target.files];
+
+
+  if(!files.length)
+    return;
+
+
+  selectedPostMedia=[];
+
+
+  let loaded=0;
+
+
+  files.forEach(file=>{
+
+    const reader=
+      new FileReader();
+
+
+    reader.onload=function(e){
+
+      selectedPostMedia.push({
+
+        type:"image",
+        src:e.target.result
+
+      });
+
+
+      loaded++;
+
+
+      if(
+        loaded===files.length
+      ){
+
+        renderPostPreview();
+
+      }
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+
+/* =========================
+   동영상
+========================= */
+
+function selectVideo(event){
+
+  const file=
+    event.target.files[0];
+
+
+  if(!file)
+    return;
+
+
+  selectedPostMedia=[];
+
+
+  const reader=
+    new FileReader();
+
+
+  reader.onload=function(e){
+
+    selectedPostMedia.push({
+
+      type:"video",
+      src:e.target.result
+
+    });
+
+
+    renderPostPreview();
+
+  };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =========================
+   미리보기
+========================= */
+
+function renderPostPreview(){
+
+  const preview=
+    document.getElementById(
+      "postPreview"
+    );
+
+
+  if(!selectedPostMedia.length){
+
+    preview.innerHTML="";
+    return;
+
+  }
+
+
+  if(
+    selectedPostMedia[0].type==="video"
+  ){
+
+    preview.innerHTML=`
+
+      <video
+        class="preview-video"
+        src="${selectedPostMedia[0].src}"
+        controls
+        playsinline>
+      </video>
+
+    `;
+
+    return;
+
+  }
+
+
+  preview.innerHTML=`
+
+    <div class="preview-grid">
+
+      ${
+        selectedPostMedia.map(
+          (item,index)=>`
+
+            <div class="preview-item">
+
+              <img src="${item.src}">
+
+              <button
+                class="preview-delete"
+                onclick="removeSelectedImage(${index})"
+              >
+                ×
+              </button>
+
+            </div>
+
+          `
+        ).join("")
+      }
+
+    </div>
+
+    <div
+      style="
+        text-align:center;
+        color:#999;
+        font-size:13px;
+        margin:8px 0 15px;
+      "
+    >
+      🖼️ 사진 ${selectedPostMedia.length}장 선택됨
+    </div>
+
+  `;
+
+}
+
+
+function removeSelectedImage(index){
+
+  selectedPostMedia.splice(
+    index,
+    1
+  );
+
+  renderPostPreview();
+
+}
+
+
+/* =========================
+   해시태그
+========================= */
+
+function extractHashtags(text){
+
+  const matches=
+    text.match(/#[^\s#]+/gu);
+
+
+  if(!matches)
+    return [];
+
+
+  return[
+    ...new Set(
+      matches.map(
+        tag=>
+          tag.substring(1).toLowerCase()
+      )
+    )
+  ];
+
+}
+
+
+function renderTextWithHashtags(text){
+
+  return escapeHTML(text)
+    .replace(
+      /#([^\s#]+)/g,
+      `<span
+        class="hashtag"
+        onclick="searchHashtag('$1')"
+      >#$1</span>`
+    );
+
+}
+
+
+function searchHashtag(tag){
+
+  document
+    .getElementById("searchInput")
+    .value="#"+tag;
+
+
+  searchType="posts";
+
+  showPage("search");
+
+  searchAll();
+
+}
+
+
+/* =========================
+   게시물 작성
+========================= */
+
+function createPost(){
+
+  const text=
+    document
+      .getElementById("postText")
+      .value
+      .trim();
+
+
+  if(
+    !text &&
+    !selectedPostMedia.length
+  ){
+
+    alert(
+      "글이나 사진/영상을 넣어주세요."
+    );
+
+    return;
+  }
+
+
+  const post={
+
+    id:
+      Date.now().toString(),
+
+    userId:
+      currentUser.id,
+
+    text,
+
+    mediaItems:
+      [...selectedPostMedia],
+
+    hashtags:
+      extractHashtags(text),
+
+    likes:[],
+    dislikes:[],
+    hearts:[],
+    comments:[],
+    views:0,
+    viewedUsers:[],
+
+    createdAt:
+      Date.now()
+
+  };
+
+
+  posts.unshift(post);
+
+
+  currentUser.exp=
+    (currentUser.exp||0)+10;
+
+
+  save();
+
+
+  document
+    .getElementById("postText")
+    .value="";
+
+  document
+    .getElementById("postImages")
+    .value="";
+
+  document
+    .getElementById("postVideo")
+    .value="";
+
+  document
+    .getElementById("postPreview")
+    .innerHTML="";
+
+
+  selectedPostMedia=[];
+
+
+  alert(
+    "게시물이 올라갔어요! 🐹"
+  );
+
+
+  showPage("home");
+
+}
+
+
+/* =========================
+   미디어
+========================= */
+
+function mediaHTML(post){
+
+  const items=
+    post.mediaItems||[];
+
+
+  if(!items.length)
+    return "";
+
+
+  const first=items[0];
+
+
+  let media;
+
+
+  if(first.type==="video"){
+
+    media=`
+
+      <video
+        class="post-media"
+        src="${first.src}"
+        controls
+        playsinline>
+      </video>
+
+    `;
+
+  }else{
+
+    media=`
+
+      <img
+        class="post-media"
+        src="${first.src}"
+      >
+
+    `;
+
+  }
+
+
+  if(items.length===1)
+    return media;
+
+
+  return`
+
+    <div
+      class="media-slider"
+      id="slider-${post.id}"
+      data-current="0"
+    >
+
+      ${media}
+
+      <div class="media-number">
+        1 / ${items.length}
+      </div>
+
+      <button
+        class="media-arrow media-left"
+        onclick="changeMedia('${post.id}',-1)"
+      >
+        ‹
+      </button>
+
+      <button
+        class="media-arrow media-right"
+        onclick="changeMedia('${post.id}',1)"
+      >
+        ›
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+function changeMedia(postId,direction){
+
+  const post=
+    posts.find(
+      p=>p.id===postId
+    );
+
+
+  if(!post)
+    return;
+
+
+  const items=
+    post.mediaItems||[];
+
+
+  const slider=
+    document.getElementById(
+      "slider-"+postId
+    );
+
+
+  let current=
+    Number(
+      slider.dataset.current||0
+    );
+
+
+  current+=direction;
+
+
+  if(current<0)
+    current=items.length-1;
+
+
+  if(current>=items.length)
+    current=0;
+
+
+  const item=
+    items[current];
+
+
+  let media;
+
+
+  if(item.type==="video"){
+
+    media=`
+
+      <video
+        class="post-media"
+        src="${item.src}"
+        controls
+        playsinline>
+      </video>
+
+    `;
+
+  }else{
+
+    media=`
+
+      <img
+        class="post-media"
+        src="${item.src}"
+      >
+
+    `;
+
+  }
+
+
+  slider.innerHTML=`
+
+    ${media}
+
+    <div class="media-number">
+      ${current+1} / ${items.length}
+    </div>
+
+    <button
+      class="media-arrow media-left"
+      onclick="changeMedia('${post.id}',-1)"
+    >
+      ‹
+    </button>
+
+    <button
+      class="media-arrow media-right"
+      onclick="changeMedia('${post.id}',1)"
+    >
+      ›
+    </button>
+
+  `;
+
+
+  slider.dataset.current=current;
+
+}
+
+
+/* =========================
+   조회수
+========================= */
+
+function countView(post){
+
+  if(!post.viewedUsers)
+    post.viewedUsers=[];
+
+
+  if(
+    !post.viewedUsers.includes(
+      currentUser.id
+    )
+  ){
+
+    post.viewedUsers.push(
+      currentUser.id
+    );
+
+    post.views=
+      (post.views||0)+1;
+
+    save();
+
+  }
+
+}
+
+
+/* =========================
+   게시물 표시
+========================= */
+
+function renderPost(post){
+
+  const user=
+    users.find(
+      u=>u.id===post.userId
+    );
+
+
+  if(!user)
+    return "";
+
+
+  countView(post);
+
+
+  const liked=
+    post.likes.includes(
+      currentUser.id
+    );
+
+
+  const disliked=
+    post.dislikes.includes(
+      currentUser.id
+    );
+
+
+  const hearted=
+    post.hearts.includes(
+      currentUser.id
+    );
+
+
+  const commentsHTML=
+    (post.comments||[])
+      .map(comment=>{
+
+        const commentUser=
+          users.find(
+            u=>u.id===comment.userId
+          );
+
+
+        if(!commentUser)
+          return "";
+
+
+        const deleteBtn=
+          comment.userId===
+          currentUser.id
+          ?`
+            <button
+              class="delete-comment"
+              onclick="
+                deleteComment(
+                  '${post.id}',
+                  '${comment.id}'
+                )
+              "
+            >
+              삭제
+            </button>
+          `
+          :"";
+
+
+        return`
+
+          <div class="comment">
+
+            <span class="comment-user">
+              ${escapeHTML(commentUser.name)}
+            </span>
+
+            ${escapeHTML(comment.text)}
+
+            ${deleteBtn}
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+
+
+  return`
+
+    <article class="card">
+
+      <div class="post-header">
+
+        <img
+          class="profile-img"
+          src="${getPhoto(user)}"
+        >
+
+        <div style="min-width:0;">
+
+          <div class="post-user-name">
+            ${escapeHTML(user.name)}
+          </div>
+
+          <div class="post-user-id">
+            @${escapeHTML(user.id)}
+          </div>
+
+        </div>
+
+        <div class="post-time">
+          ${timeAgo(post.createdAt)}
+        </div>
+
+      </div>
+
+
+      ${
+        post.text
+        ?`
+          <div class="post-text">
+            ${renderTextWithHashtags(post.text)}
+          </div>
+        `
+        :""
+      }
+
+
+      ${mediaHTML(post)}
+
+
+      <div class="post-stats">
+
+        👀 ${post.views||0}
+        ·
+        ❤️ ${post.hearts.length}
+        ·
+        💬 ${(post.comments||[]).length}
+
+      </div>
+
+
+      <div class="post-actions">
+
+        <button
+          class="action-btn ${liked?"active":""}"
+          onclick="toggleLike('${post.id}')"
+        >
+          👍 ${post.likes.length}
+        </button>
+
+        <button
+          class="action-btn ${disliked?"active":""}"
+          onclick="toggleDislike('${post.id}')"
+        >
+          👎 ${post.dislikes.length}
+        </button>
+
+        <button
+          class="action-btn ${hearted?"active":""}"
+          onclick="toggleHeart('${post.id}')"
+        >
+          ❤️ ${post.hearts.length}
+        </button>
+
+      </div>
+
+
+      <div class="comment-box">
+
+        <input
+          id="comment-${post.id}"
+          placeholder="댓글을 남겨보세요..."
+          onkeydown="
+            if(event.key==='Enter')
+              addComment('${post.id}')
+          "
+        >
+
+        <button
+          onclick="addComment('${post.id}')"
+        >
+          등록
+        </button>
+
+      </div>
+
+
+      <div style="margin-top:10px;">
+        ${commentsHTML}
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+/* =========================
+   홈
+========================= */
+
+function renderHome(){
+
+  const box=
+    document.getElementById(
+      "homePosts"
+    );
+
+
+  if(!posts.length){
+
+    box.innerHTML=`
+
+      <div class="card empty">
+        아직 게시물이 없어요 🐹
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML=
+    posts
+      .map(renderPost)
+      .join("");
+
+}
+
+
+/* =========================
+   좋아요
+========================= */
+
+function toggleLike(postId){
+
+  const post=
+    posts.find(
+      p=>p.id===postId
+    );
+
+
+  if(!post)
+    return;
+
+
+  const index=
+    post.likes.indexOf(
+      currentUser.id
+    );
+
+
+  if(index===-1){
+
+    post.likes.push(
+      currentUser.id
+    );
+
+
+    const dislike=
+      post.dislikes.indexOf(
+        currentUser.id
+      );
+
+
+    if(dislike!==-1)
+      post.dislikes.splice(
+        dislike,
+        1
+      );
+
+
+    if(
+      post.userId!==currentUser.id
+    ){
+
+      addNotification(
+        post.userId,
+        "like",
+        postId
+      );
+
+    }
+
+  }else{
+
+    post.likes.splice(
+      index,
+      1
+    );
+
+  }
+
+
+  save();
+
+  renderHome();
+
+}
+
+
+/* =========================
+   싫어요
+========================= */
+
+function toggleDislike(postId){
+
+  const post=
+    posts.find(
+      p=>p.id===postId
+    );
+
+
+  if(!post)
+    return;
+
+
+  const index=
+    post.dislikes.indexOf(
+      currentUser.id
+    );
+
+
+  if(index===-1){
+
+    post.dislikes.push(
+      currentUser.id
+    );
+
+
+    const like=
+      post.likes.indexOf(
+        currentUser.id
+      );
+
+
+    if(like!==-1)
+      post.likes.splice(
+        like,
+        1
+      );
+
+  }else{
+
+    post.dislikes.splice(
+      index,
+      1
+    );
+
+  }
+
+
+  save();
+
+  renderHome();
+
+}
+
+
+/* =========================
+   공감
+========================= */
+
+function toggleHeart(postId){
+
+  const post=
+    posts.find(
+      p=>p.id===postId
+    );
+
+
+  if(!post)
+    return;
+
+
+  const index=
+    post.hearts.indexOf(
+      currentUser.id
+    );
+
+
+  if(index===-1){
+
+    post.hearts.push(
+      currentUser.id
+    );
+
+
+    if(
+      post.userId!==currentUser.id
+    ){
+
+      addNotification(
+        post.userId,
+        "heart",
+        postId
+      );
+
+    }
+
+  }else{
+
+    post.hearts.splice(
+      index,
+      1
+    );
+
+  }
+
+
+  save();
+
+  renderHome();
+
+}
+
+
+/* =========================
+   댓글
+========================= */
+
+function addComment(postId){
+
+  const input=
+    document.getElementById(
+      "comment-"+postId
+    );
+
+
+  const text=
+    input.value.trim();
+
+
+  if(!text)
+    return;
+
+
+  const post=
+    posts.find(
+      p=>p.id===postId
+    );
+
+
+  if(!post)
+    return;
+
+
+  post.comments.push({
+
+    id:
+      Date.now().toString(),
+
+    userId:
+      currentUser.id,
+
+    text,
+
+    createdAt:
+      Date.now()
+
+  });
+
+
+  currentUser.exp=
+    (currentUser.exp||0)+2;
+
+
+  if(
+    post.userId!==currentUser.id
+  ){
+
+    addNotification(
+      post.userId,
+      "comment",
+      postId
+    );
+
+  }
+
+
+  input.value="";
+
+
+  save();
+
+  renderHome();
+
+}
+
+
+function deleteComment(postId,commentId){
+
+  const post=
+    posts.find(
+      p=>p.id===postId
+    );
+
+
+  if(!post)
+    return;
+
+
+  const index=
+    post.comments.findIndex(
+      c=>
+        c.id===commentId &&
+        c.userId===currentUser.id
+    );
+
+
+  if(index===-1)
+    return;
+
+
+  post.comments.splice(
+    index,
+    1
+  );
+
+
+  save();
+
+  renderHome();
+
+}
+
+
+/* =========================
+   팔로우
+========================= */
+
+function toggleFollow(userId){
+
+  if(
+    userId===currentUser.id
+  ){
+
+    alert(
+      "자기 자신은 팔로우할 수 없어요."
+    );
+
+    return;
+
+  }
+
+
+  const target=
+    users.find(
+      u=>u.id===userId
+    );
+
+
+  if(!target)
+    return;
+
+
+  const index=
+    currentUser.following.indexOf(
+      userId
+    );
+
+
+  if(index===-1){
+
+    currentUser.following.push(
+      userId
+    );
+
+
+    if(
+      !target.followers.includes(
+        currentUser.id
+      )
+    ){
+
+      target.followers.push(
+        currentUser.id
+      );
+
+    }
+
+
+    currentUser.exp=
+      (currentUser.exp||0)+5;
+
+
+    addNotification(
+      userId,
+      "follow",
+      null
+    );
+
+  }else{
+
+    currentUser.following.splice(
+      index,
+      1
+    );
+
+
+    const followerIndex=
+      target.followers.indexOf(
+        currentUser.id
+      );
+
+
+    if(followerIndex!==-1){
+
+      target.followers.splice(
+        followerIndex,
+        1
+      );
+
+    }
+
+  }
+
+
+  save();
+
+  renderSearchResults();
+  renderProfile();
+  renderPeopleList();
+
+}
+
+
+/* =========================
+   팔로워 / 팔로잉
+========================= */
+
+function showPeopleList(type){
+
+  if(type==="posts"){
+
+    showPage("profile");
+    return;
+
+  }
+
+
+  peopleMode=type;
+
+  showPage("people");
+
+}
+
+
+function renderPeopleList(){
+
+  const title=
+    document.getElementById(
+      "peopleTitle"
+    );
+
+
+  const box=
+    document.getElementById(
+      "peopleList"
+    );
+
+
+  let ids=[];
+
+
+  if(peopleMode==="followers"){
+
+    title.textContent="👥 팔로워";
+
+    ids=
+      currentUser.followers||[];
+
+  }else{
+
+    title.textContent="👥 팔로잉";
+
+    ids=
+      currentUser.following||[];
+
+  }
+
+
+  const people=
+    ids
+      .map(
+        id=>
+          users.find(
+            u=>u.id===id
+          )
+      )
+      .filter(Boolean);
+
+
+  if(!people.length){
+
+    box.innerHTML=`
+
+      <div class="empty">
+        아직 ${
+          peopleMode==="followers"
+          ?"팔로워"
+          :"팔로잉"
+        }가 없어요 🐹
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML=
+    people.map(
+      user=>{
+
+        const following=
+          currentUser.following
+            .includes(user.id);
+
+
+        return`
+
+          <div class="person-item">
+
+            <img
+              class="profile-img"
+              src="${getPhoto(user)}"
+            >
+
+            <div class="person-info">
+
+              <div class="person-name">
+                ${escapeHTML(user.name)}
+              </div>
+
+              <div class="person-id">
+                @${escapeHTML(user.id)}
+              </div>
+
+            </div>
+
+            ${
+              user.id!==currentUser.id
+              ?`
+                <button
+                  class="
+                    follow-btn
+                    ${following?"following":""}
+                  "
+                  onclick="
+                    toggleFollow('${user.id}')
+                  "
+                >
+                  ${
+                    following
+                    ?"팔로잉"
+                    :"팔로우"
+                  }
+                </button>
+              `
+              :""
+            }
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* =========================
+   검색
+========================= */
+
+function setSearchType(type){
+
+  searchType=type;
+
+
+  document
+    .getElementById("searchPostTab")
+    .classList.toggle(
+      "active",
+      type==="posts"
+    );
+
+
+  document
+    .getElementById("searchUserTab")
+    .classList.toggle(
+      "active",
+      type==="users"
+    );
+
+
+  searchAll();
+
+}
+
+
+function searchAll(){
+
+  if(searchType==="posts")
+    renderPostSearch();
+  else
+    renderUserSearch();
+
+}
+
+
+function renderPostSearch(){
+
+  const keyword=
+    document
+      .getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const box=
+    document.getElementById(
+      "searchResults"
+    );
+
+
+  if(!keyword){
+
+    box.innerHTML=`
+
+      <div class="card empty">
+        게시물 내용이나 #해시태그를 검색해보세요 🔍
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const hashtagKeyword=
+    keyword.startsWith("#")
+    ?keyword.substring(1)
+    :null;
+
+
+  const results=
+    posts.filter(post=>{
+
+      const user=
+        users.find(
+          u=>u.id===post.userId
+        );
+
+
+      const text=
+        (post.text||"")
+          .toLowerCase();
+
+
+      const tags=
+        post.hashtags||[];
+
+
+      if(hashtagKeyword){
+
+        return tags.some(
+          tag=>tag===hashtagKeyword
+        );
+
+      }
+
+
+      return(
+        text.includes(keyword) ||
+
+        tags.some(
+          tag=>tag.includes(keyword)
+        ) ||
+
+        (
+          user &&
+          (
+            user.name
+              .toLowerCase()
+              .includes(keyword) ||
+
+            user.id
+              .toLowerCase()
+              .includes(keyword)
+          )
+        )
+      );
+
+    });
+
+
+  if(!results.length){
+
+    box.innerHTML=`
+
+      <div class="card empty">
+        검색된 게시물이 없어요 🐹
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML=
+    results
+      .map(renderPost)
+      .join("");
+
+}
+
+
+function renderUserSearch(){
+
+  const keyword=
+    document
+      .getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const box=
+    document.getElementById(
+      "searchResults"
+    );
+
+
+  if(!keyword){
+
+    box.innerHTML=`
+
+      <div class="card empty">
+        닉네임이나 아이디를 검색해보세요 🔍
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const results=
+    users.filter(
+      user=>
+        user.name
+          .toLowerCase()
+          .includes(keyword) ||
+
+        user.id
+          .toLowerCase()
+          .includes(keyword)
+    );
+
+
+  if(!results.length){
+
+    box.innerHTML=`
+
+      <div class="card empty">
+        검색된 사람이 없어요 🐹
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML=
+    results.map(
+      user=>{
+
+        const following=
+          currentUser.following
+            .includes(user.id);
+
+
+        return`
+
+          <div class="card">
+
+            <div class="person-item">
+
+              <img
+                class="profile-img"
+                src="${getPhoto(user)}"
+              >
+
+              <div class="person-info">
+
+                <div class="person-name">
+                  ${escapeHTML(user.name)}
+                </div>
+
+                <div class="person-id">
+                  @${escapeHTML(user.id)}
+                </div>
+
+              </div>
+
+              ${
+                user.id!==currentUser.id
+                ?`
+                  <button
+                    class="
+                      follow-btn
+                      ${following?"following":""}
+                    "
+                    onclick="
+                      toggleFollow('${user.id}')
+                    "
+                  >
+                    ${
+                      following
+                      ?"팔로잉"
+                      :"팔로우"
+                    }
+                  </button>
+                `
+                :""
+              }
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+function renderSearchResults(){
+
+  if(
+    !document
+      .getElementById("searchPage")
+      .classList.contains("hidden")
+  ){
+
+    searchAll();
+
+  }
+
+}
+
+
+/* =========================
+   인기
+========================= */
+
+function popularScore(post){
+
+  return(
+    (post.views||0)*1+
+    post.likes.length*4+
+    post.hearts.length*6+
+    (post.comments||[]).length*5
+  );
+
+}
+
+
+function renderPopular(){
+
+  const box=
+    document.getElementById(
+      "popularPosts"
+    );
+
+
+  if(!posts.length){
+
+    box.innerHTML=`
+
+      <div class="card empty">
+        아직 게시물이 없어요 🐹
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const popular=
+    [...posts].sort(
+      (a,b)=>
+        popularScore(b)-
+        popularScore(a)
+    );
+
+
+  box.innerHTML=
+    popular
+      .map(renderPost)
+      .join("");
+
+}
+
+
+/* =========================
+   알림
+========================= */
+
+function addNotification(
+  toUserId,
+  type,
+  postId
+){
+
+  notifications.unshift({
+
+    id:
+      Date.now().toString()+
+      Math.random(),
+
+    toUserId,
+
+    type,
+
+    fromUserId:
+      currentUser.id,
+
+    postId,
+
+    read:false,
+
+    createdAt:
+      Date.now()
+
+  });
+
+
+  save();
+
+}
+
+
+function renderNotifications(){
+
+  const box=
+    document.getElementById(
+      "notificationsList"
+    );
+
+
+  const list=
+    notifications.filter(
+      n=>
+        n.toUserId===
+        currentUser.id
+    );
+
+
+  if(!list.length){
+
+    box.innerHTML=`
+
+      <div class="empty">
+        아직 알림이 없어요 🐹
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML=
+    list.map(
+      n=>{
+
+        const from=
+          users.find(
+            u=>u.id===n.fromUserId
+          );
+
+
+        if(!from)
+          return "";
+
+
+        let message="";
+
+
+        if(n.type==="follow")
+          message=
+            `${escapeHTML(from.name)}님이 회원님을 팔로우했어요.`;
+
+        if(n.type==="like")
+          message=
+            `${escapeHTML(from.name)}님이 회원님의 게시물을 좋아해요.`;
+
+        if(n.type==="heart")
+          message=
+            `${escapeHTML(from.name)}님이 회원님의 게시물에 공감했어요.`;
+
+        if(n.type==="comment")
+          message=
+            `${escapeHTML(from.name)}님이 회원님의 게시물에 댓글을 남겼어요.`;
+
+
+        return`
+
+          <div
+            class="
+              notification
+              ${n.read?"":"unread"}
+            "
+          >
+
+            <img
+              class="profile-img"
+              src="${getPhoto(from)}"
+            >
+
+            <div style="min-width:0;">
+              ${message}
+            </div>
+
+            <div class="notification-time">
+              ${timeAgo(n.createdAt)}
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+
+  notifications.forEach(n=>{
+
+    if(
+      n.toUserId===
+      currentUser.id
+    )
+      n.read=true;
+
+  });
+
+
+  save();
+
+}
+
+
+/* =========================
+   프로필
+========================= */
+
+function renderProfile(){
+
+  document
+    .getElementById("profilePhoto")
+    .src=
+      getPhoto(currentUser);
+
+
+  document
+    .getElementById("profileName")
+    .textContent=
+      currentUser.name;
+
+
+  document
+    .getElementById("profileId")
+    .textContent=
+      "@"+currentUser.id;
+
+
+  const myPosts=
+    posts.filter(
+      p=>p.userId===currentUser.id
+    );
+
+
+  document
+    .getElementById("profilePostCount")
+    .textContent=
+      myPosts.length;
+
+
+  document
+    .getElementById("profileFollowerCount")
+    .textContent=
+      currentUser.followers.length;
+
+
+  document
+    .getElementById("profileFollowingCount")
+    .textContent=
+      currentUser.following.length;
+
+
+  renderLevel();
+
+
+  document
+    .getElementById("profilePosts")
+    .innerHTML=
+      myPosts.length
+      ?myPosts
+        .map(renderPost)
+        .join("")
+      :`
+        <div class="card empty">
+          아직 게시물이 없어요 🐹
+        </div>
+      `;
+
+}
+
+
+/* =========================
+   레벨
+========================= */
+
+function getLevel(exp){
+
+  return(
+    Math.floor(
+      (exp||0)/100
+    )+1
+  );
+
+}
+
+
+function renderLevel(){
+
+  const exp=
+    currentUser.exp||0;
+
+  const level=
+    getLevel(exp);
+
+  const current=
+    exp%100;
+
+
+  document
+    .getElementById("profileLevel")
+    .innerHTML=`
+
+      <div
+        style="
+          font-weight:bold;
+          margin-bottom:7px;
+        "
+      >
+        ⭐ Lv.${level}
+      </div>
+
+      <div
+        style="
+          font-size:13px;
+          color:#777;
+          margin-bottom:8px;
+        "
+      >
+        경험치 ${current} / 100
+      </div>
+
+      <div class="progress-bg">
+
+        <div
+          class="progress"
+          style="width:${current}%"
+        ></div>
+
+      </div>
+
+    `;
+
+}
+
+
+/* =========================
+   랭킹
+========================= */
+
+function calculateScore(user){
+
+  const userPosts=
+    posts.filter(
+      p=>p.userId===user.id
+    );
+
+
+  const likes=
+    userPosts.reduce(
+      (sum,p)=>
+        sum+p.likes.length,
+      0
+    );
+
+
+  const hearts=
+    userPosts.reduce(
+      (sum,p)=>
+        sum+p.hearts.length,
+      0
+    );
+
+
+  const comments=
+    userPosts.reduce(
+      (sum,p)=>
+        sum+
+        (p.comments
+        ?p.comments.length
+        :0),
+      0
+    );
+
+
+  return(
+    user.followers.length*5+
+    userPosts.length*10+
+    likes*2+
+    hearts*3+
+    comments*2
+  );
+
+}
+
+
+function renderRanking(){
+
+  const box=
+    document.getElementById(
+      "rankingList"
+    );
+
+
+  const ranking=
+    [...users].sort(
+      (a,b)=>
+        calculateScore(b)-
+        calculateScore(a)
+    );
+
+
+  if(!ranking.length){
+
+    box.innerHTML=`
+
+      <div class="empty">
+        아직 회원이 없어요.
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML=
+    ranking.map(
+      (user,index)=>`
+
+        <div class="rank-item">
+
+          <div class="rank-number">
+            ${index+1}
+          </div>
+
+          <img
+            class="profile-img"
+            src="${getPhoto(user)}"
+          >
+
+          <div class="rank-info">
+
+            <div style="font-weight:bold;">
+              ${escapeHTML(user.name)}
+            </div>
+
+            <div
+              style="
+                color:#999;
+                font-size:13px;
+              "
+            >
+              @${escapeHTML(user.id)}
+              · 점수 ${calculateScore(user)}
+            </div>
+
+          </div>
+
+          <div>
+            ⭐ Lv.${getLevel(user.exp||0)}
+          </div>
+
+        </div>
+
+      `
+    ).join("");
+
+}
+
+
+/* =========================
+   시간
+========================= */
+
+function timeAgo(timestamp){
+
+  const seconds=
+    Math.floor(
+      (Date.now()-timestamp)/1000
+    );
+
+
+  if(seconds<60)
+    return "방금 전";
+
+
+  const minutes=
+    Math.floor(seconds/60);
+
+
+  if(minutes<60)
+    return minutes+"분 전";
+
+
+  const hours=
+    Math.floor(minutes/60);
+
+
+  if(hours<24)
+    return hours+"시간 전";
+
+
+  const days=
+    Math.floor(hours/24);
+
+
+  return days+"일 전";
+
+}
+
+
+/* =========================
+   HTML 보호
+========================= */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+</script>
+
+</body>
+</html>
